@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.oumellahni</groupId>
     <artifactId>service-registry</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>service-registry</name>
     <description>service-registry</description>
     <properties>
@@ -50,6 +50,20 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>3.4.0</version>
+                <configuration>
+                    <from>
+                        <image>openjdk:17</image>
+                    </from>
+                    <to>
+                        <image>registry.hub.docker.com/oumellahni/server-registry</image>
+                        <tags>${project.version}</tags>
+                    </to>
+                </configuration>
             </plugin>
         </plugins>
     </build>

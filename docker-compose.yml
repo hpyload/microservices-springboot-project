@@ -1,0 +1,41 @@
+version: "3.8"
+services:
+  service-registry:
+    image: 'oumellahni/service-registry:0.0.1'
+    container_name: service-registry
+    ports:
+      - '8761:8761'
+#    networks:
+#      - my-network
+  config-server:
+    image: 'oumellahni/config-server:0.0.1'
+    container_name: config-server
+    ports:
+      - '9226:9226'
+#    networks:
+#      - my-network
+    depends_on:
+      - service-registry
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://config-server:9226/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      - EUREKA_SERVER_ADDRESS=http://service-registry:8761/eureka
+  cloud-gateway:
+    image: 'oumellahni/cloud-gateway:0.0.1'
+    container_name: cloud-gateway
+    ports:
+      - '9090:9090'
+#    networks:
+#      - my-network
+    depends_on:
+      config-server:
+        condition: service_healthy
+    environment:
+      - EUREKA_SERVER_ADDRESS=http://service-registry:8761/eureka
+      - CONFIG_SERVER_URL=http://config-server:9226
+#networks:
+#  my-network:
+#    driver: bridge
